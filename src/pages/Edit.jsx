@@ -1,8 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function Edit() {
+export default function Edit({ data, setData }) {
+  const { id } = useParams();
+  const detail = data.find((item) => item.id.toString() === id);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const navigater = useNavigate();
+
   return (
     <Fragment>
       <Header />
@@ -21,7 +28,11 @@ export default function Edit() {
         >
           <div>
             <input
-              placeholder="제목"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+              placeholder={detail.title}
               style={{
                 width: "100%",
                 height: "60px",
@@ -39,7 +50,11 @@ export default function Edit() {
             }}
           >
             <textarea
-              placeholder="내용"
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
+              placeholder={detail.content}
               style={{
                 resize: "none",
                 height: "100%",
@@ -53,6 +68,17 @@ export default function Edit() {
             />
           </div>
           <button
+            onClick={() => {
+              const newTodo = {
+                id: detail.id,
+                title: title,
+                content: content,
+              };
+              setData((prevData) =>
+                prevData.map((item) => (item.id === id ? newTodo : item))
+              );
+              navigater("/");
+            }}
             style={{
               width: "100%",
               height: "40px",

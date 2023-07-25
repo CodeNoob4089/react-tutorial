@@ -1,10 +1,12 @@
 import React from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function Detail() {
+export default function Detail({ data, setData }) {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const detail = data.find((item) => item.id === id);
   return (
     <>
       <Header />
@@ -16,7 +18,7 @@ export default function Detail() {
             padding: "12px",
           }}
         >
-          제목
+          {detail.title}
         </h1>
         <div
           style={{
@@ -26,10 +28,7 @@ export default function Detail() {
             padding: "12px",
           }}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad doloribus
-          blanditiis vitae sapiente. Expedita delectus nihil animi pariatur,
-          labore quod officiis dolor fugit. Mollitia quod, delectus velit
-          deleniti nihil veniam!
+          {detail.content}
         </div>
         <div
           style={{
@@ -40,7 +39,7 @@ export default function Detail() {
         >
           <button
             onClick={() => {
-              navigate("/edit");
+              navigate(`/edit/${detail.id}`);
             }}
             style={{
               border: "none",
@@ -57,6 +56,12 @@ export default function Detail() {
           <button
             onClick={() => {
               alert("삭제할까?");
+              const removeData = (id) => {
+                const newData = data.filter((item) => item.id !== id);
+                setData(newData);
+              };
+              removeData(detail.id);
+              navigate("/");
             }}
             style={{
               border: "none",
