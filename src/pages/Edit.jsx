@@ -6,8 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function Edit({ data, setData }) {
   const { id } = useParams();
   const detail = data.find((item) => item.id.toString() === id); //data에 들어있는 값들 중 useParams를 이용해서 가져온 id값과 일치하는 객체만 따로 꺼낸다.
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(detail.title);
+  const [content, setContent] = useState(detail.content);
   const navigater = useNavigate();
 
   return (
@@ -32,7 +32,7 @@ export default function Edit({ data, setData }) {
               onChange={(e) => {
                 setTitle(e.target.value);
               }}
-              placeholder={detail.title}
+              placeholder="제목"
               style={{
                 width: "100%",
                 height: "60px",
@@ -54,7 +54,7 @@ export default function Edit({ data, setData }) {
               onChange={(e) => {
                 setContent(e.target.value);
               }}
-              placeholder={detail.content}
+              placeholder="내용"
               style={{
                 resize: "none",
                 height: "100%",

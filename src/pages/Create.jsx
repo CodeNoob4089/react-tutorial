@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Header from "../common/Header";
 import Container from "../common/Container";
+import { nanoid } from "nanoid";
+import { useNavigate } from "react-router-dom";
 
-export default function Create() {
+export default function Create({ data, setData }) {
+  const navigater = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   return (
     <>
       <Header />
@@ -22,6 +27,9 @@ export default function Create() {
         >
           <div>
             <input
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               placeholder="제목"
               style={{
                 width: "100%",
@@ -40,6 +48,9 @@ export default function Create() {
             }}
           >
             <textarea
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
               placeholder="내용"
               style={{
                 resize: "none",
@@ -54,6 +65,15 @@ export default function Create() {
             />
           </div>
           <button
+            onClick={() => {
+              const newTodo = {
+                id: nanoid(),
+                title: title,
+                content: content,
+              };
+              setData([...data, newTodo]);
+              navigater("/");
+            }}
             style={{
               width: "100%",
               height: "40px",
