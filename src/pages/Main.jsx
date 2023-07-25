@@ -101,6 +101,7 @@ export default function Main({ data, setData }) {
                     onClick={() => {
                       alert("삭제할까?");
                       const removeData = (id) => {
+                        //기존 data값에서 조건을 걸어두고 map으로 뿌려지고있는 현재의 data들에서 item.id와 data내의 id값이 일치하지 않는것들로만 새로 만들어서 data State를 새로 만들었다.
                         const newData = data.filter((item) => item.id !== id);
                         setData(newData);
                       };
