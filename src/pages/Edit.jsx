@@ -2,8 +2,12 @@ import React, { Fragment, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { edit } from "../redux/todolist";
 
-export default function Edit({ data, setData }) {
+export default function Edit() {
+  const data = useSelector((state) => state.todolist);
+  const dispatch = useDispatch();
   const { id } = useParams();
   const detail = data.find((item) => item.id === id); //data에 들어있는 값들 중 useParams를 이용해서 가져온 id값과 일치하는 객체만 따로 꺼낸다.
   const [title, setTitle] = useState(detail.title);
@@ -69,17 +73,7 @@ export default function Edit({ data, setData }) {
           </div>
           <button
             onClick={() => {
-              //수정기능 : newTodo라는 새로운 객체를 만들어서 id값은 기존의 data와 동일해야하니 유지를 하고 title과 content만 변경되게끔했다.
-              const newTodo = {
-                id: detail.id,
-                title: title,
-                content: content,
-              };
-              setData(
-                (
-                  prevData //setData를 통해 state를 변경하고자 했다. prevData는 기존 state배열이고 map을 사용해 id값이 일치하는 객체는 newTodo에 해당하는 값으로 변경되게하고 일치하지 않는 객체는 그대로 반환해 새로운 배엻을 만들게 했다.
-                ) => prevData.map((item) => (item.id === id ? newTodo : item))
-              );
+              dispatch(edit({ id: detail.id, title: title, content: content }));
               navigater("/");
             }}
             style={{
