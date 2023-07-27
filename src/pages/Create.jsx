@@ -2,10 +2,12 @@ import React, { useState } from "react";
 
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { add } from "../redux/todolist";
 
-export default function Create({ data, setData }) {
+export default function Create() {
+  const dispatch = useDispatch();
   const navigater = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -27,6 +29,7 @@ export default function Create({ data, setData }) {
         >
           <div>
             <input
+              value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
               }}
@@ -48,6 +51,7 @@ export default function Create({ data, setData }) {
             }}
           >
             <textarea
+              value={content}
               onChange={(e) => {
                 setContent(e.target.value);
               }}
@@ -66,12 +70,7 @@ export default function Create({ data, setData }) {
           </div>
           <button
             onClick={() => {
-              const newTodo = {
-                id: nanoid(),
-                title: title,
-                content: content,
-              };
-              setData([...data, newTodo]);
+              dispatch(add({ title: title, content: content }));
               navigater("/");
             }}
             style={{

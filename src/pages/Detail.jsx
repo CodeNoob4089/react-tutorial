@@ -2,9 +2,13 @@ import React from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { remove } from "../redux/todolist";
 
-export default function Detail({ data, setData }) {
+export default function Detail() {
+  const data = useSelector((state) => state.todolist);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
   //옵셔널체이닝 생각
   const detail = data.find((item) => item.id === id); //data에 들어있는 값들 중 useParams를 이용해서 가져온 id값과 일치하는 객체만 따로 꺼낸다.
@@ -57,12 +61,7 @@ export default function Detail({ data, setData }) {
           <button
             onClick={() => {
               alert("삭제할까?");
-              const removeData = (id) => {
-                //기존 data값에서 조건을 걸어두고 map으로 뿌려지고있는 현재의 data들에서 item.id와 data내의 id값이 일치하지 않는것들로만 새로 만들어서 data State를 새로 만들었다.
-                const newData = data.filter((item) => item.id !== id);
-                setData(newData);
-              };
-              removeData(detail.id);
+              dispatch(remove(detail.id));
               navigate("/");
             }}
             style={{
