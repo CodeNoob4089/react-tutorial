@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function Detail({ data, setData }) {
   const navigate = useNavigate();
   const { id } = useParams();
+  //옵셔널체이닝 생각
   const detail = data.find((item) => item.id === id); //data에 들어있는 값들 중 useParams를 이용해서 가져온 id값과 일치하는 객체만 따로 꺼낸다.
   return (
     <>
@@ -18,7 +19,7 @@ export default function Detail({ data, setData }) {
             padding: "12px",
           }}
         >
-          {detail.title}
+          {detail?.title}
         </h1>
         <div
           style={{
@@ -28,7 +29,7 @@ export default function Detail({ data, setData }) {
             padding: "12px",
           }}
         >
-          {detail.content}
+          {detail?.content}
         </div>
         <div
           style={{
