@@ -27,11 +27,12 @@ let todolist = createSlice({
   initialState: initialState,
   reducers: {
     add: (state, action) => {
-      const { title, content } = action.payload;
+      const { title, content, author } = action.payload;
       state.push({
         id: nanoid(),
         title: title,
         content: content,
+        author: author,
       });
     },
     remove: (state, action) => {

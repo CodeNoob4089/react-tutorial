@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { remove } from "../redux/todolist";
 export default function Main() {
   const data = useSelector((state) => state.todolist);
+  const user = useSelector((state) => state.UserInfo);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,9 +22,11 @@ export default function Main() {
           }}
         >
           <button
-            onClick={() => {
-              navigate("/create");
-            }}
+            onClick={() =>
+              user
+                ? navigate("/create")
+                : alert("로그인 후 사용 가능합니다.", navigate("login"))
+            }
             style={{
               border: "none",
               padding: "8px",
@@ -87,7 +90,15 @@ export default function Main() {
                 <div>
                   <button
                     onClick={() => {
-                      navigate(`/edit/${item.id}`);
+                      if (user !== null) {
+                        if (item.author !== user.email) {
+                          return alert("수정권한이 없습니다.");
+                        } else {
+                          return navigate(`/edit/${item.id}`);
+                        }
+                      } else {
+                        return alert("로그인이 필요합니다"), navigate("/login");
+                      }
                     }}
                     style={{
                       border: "none",
@@ -103,8 +114,22 @@ export default function Main() {
                   </button>
                   <button
                     onClick={() => {
-                      alert("삭제할까?");
-                      dispatch(remove(item.id));
+                      if (user !== null) {
+                        if (item.author === user.email) {
+                          if (window.confirm("삭제하시겠습니까?")) {
+                            return (
+                              dispatch(remove(item.id)),
+                              alert("삭제되었습니다.")
+                            );
+                          } else {
+                            return;
+                          }
+                        } else {
+                          alert("삭제권한이 없습니다");
+                        }
+                      } else {
+                        return alert("로그인이 필요합니다"), navigate("/login");
+                      }
                     }}
                     style={{
                       border: "none",

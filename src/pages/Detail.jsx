@@ -7,6 +7,7 @@ import { remove } from "../redux/todolist";
 
 export default function Detail() {
   const data = useSelector((state) => state.todolist);
+  const user = useSelector((state) => state.UserInfo);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -44,7 +45,15 @@ export default function Detail() {
         >
           <button
             onClick={() => {
-              navigate(`/edit/${detail.id}`);
+              if (user !== null) {
+                if (detail.author !== user.email) {
+                  return alert("수정권한이 없습니다.");
+                } else {
+                  return navigate(`/edit/${detail.id}`);
+                }
+              } else {
+                return alert("로그인이 필요합니다"), navigate("/login");
+              }
             }}
             style={{
               border: "none",
@@ -60,9 +69,23 @@ export default function Detail() {
           </button>
           <button
             onClick={() => {
-              alert("삭제할까?");
-              dispatch(remove(detail.id));
-              navigate("/");
+              if (user !== null) {
+                if (detail.author === user.email) {
+                  if (window.confirm("삭제하시겠습니까?")) {
+                    return (
+                      dispatch(remove(detail.id)),
+                      alert("삭제되었습니다."),
+                      navigate("/")
+                    );
+                  } else {
+                    return;
+                  }
+                } else {
+                  alert("삭제권한이 없습니다");
+                }
+              } else {
+                return alert("로그인이 필요합니다"), navigate("/login");
+              }
             }}
             style={{
               border: "none",

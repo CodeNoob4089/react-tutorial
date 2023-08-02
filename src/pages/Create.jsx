@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useSelector } from "react-redux";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +7,10 @@ import { useDispatch } from "react-redux";
 import { add } from "../redux/todolist";
 
 export default function Create() {
+  const user = useSelector((state) => state.UserInfo);
   const dispatch = useDispatch();
   const navigater = useNavigate();
+  // useState 각각 사용하는 것 보단 묶어서 하나의 State의 형태로 관리하는게 용이
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   return (
@@ -70,7 +72,9 @@ export default function Create() {
           </div>
           <button
             onClick={() => {
-              dispatch(add({ title: title, content: content }));
+              dispatch(
+                add({ title: title, content: content, author: user.email })
+              );
               navigater("/");
             }}
             style={{
