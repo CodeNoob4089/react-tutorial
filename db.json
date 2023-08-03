@@ -1,10 +1,28 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "제목예시",
-      "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum dolor, sit amet consectetur adipisicing elit.Lorem ipsum dolor, sit amet consectetur adipisicing elit.Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-      "author": "abc@naver.com"
+      "id": "custom_id_001",
+      "title": "리액트 복습하기",
+      "content": "리액트 내용 복습하기",
+      "author": "작성자"
+    },
+    {
+      "id": "custom_id_002",
+      "title": "리덕스툴킷 복습하기",
+      "content": "리덕스툴킷 내용 복습하기",
+      "author": "작성자"
+    },
+    {
+      "id": "custom_id_003",
+      "title": "타입스크립트 공부하기",
+      "content": "타입스크립트 공부하기",
+      "author": "작성자"
+    },
+    {
+      "title": "35435",
+      "content": "345345",
+      "author": "test@test.com",
+      "id": "vHpk0Ma"
     }
   ]
 }

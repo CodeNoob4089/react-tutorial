@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import Header from "../common/Header";
-import Container from "../common/Container";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Container from "../common/Container";
+import Header from "../common/Header";
 import { db } from "../firebase";
-import { where, query, getDocs } from "firebase/firestore";
 import { getUserInfo } from "../redux/UserInfo";
-import { collection } from "firebase/firestore";
 
 export default function Login() {
   const [email, setEmail] = useState("");

@@ -1,18 +1,45 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { edit } from "../redux/todolist";
+import axios from "axios";
+import { useMutation, useQueryClient } from "react-query";
+
+const fetchPost = async (id) => {
+  const { data } = await axios.get(`http://localhost:4000/posts/${id}`);
+  return data;
+};
+
+const updatePosts = async ({ id, title, content }) => {
+  const { data } = await axios.patch(`http://localhost:4000/posts/${id}`, {
+    title,
+    content,
+  });
+  return data;
+};
 
 export default function Edit() {
-  const data = useSelector((state) => state.todolist);
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(updatePosts, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("posts");
+    },
+  });
+
   const { id } = useParams();
-  const detail = data.find((item) => item.id === id); //data에 들어있는 값들 중 useParams를 이용해서 가져온 id값과 일치하는 객체만 따로 꺼낸다.
-  const [title, setTitle] = useState(detail.title);
-  const [content, setContent] = useState(detail.content);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const navigater = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const post = await fetchPost(id);
+      setTitle(post.title);
+      setContent(post.content);
+    };
+
+    fetchData();
+  }, [id]);
 
   return (
     <Fragment>
@@ -27,7 +54,8 @@ export default function Edit() {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            console.log("제출!");
+            mutation.mutate({ id, title, content });
+            navigater("/");
           }}
         >
           <div>
@@ -72,10 +100,7 @@ export default function Edit() {
             />
           </div>
           <button
-            onClick={() => {
-              dispatch(edit({ id: detail.id, title: title, content: content }));
-              navigater("/");
-            }}
+            type="submit"
             style={{
               width: "100%",
               height: "40px",

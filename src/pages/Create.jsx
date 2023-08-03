@@ -3,16 +3,43 @@ import { useSelector } from "react-redux";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { add } from "../redux/todolist";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
+
+async function createPost(post) {
+  const response = await axios.post("http://localhost:4000/posts", post);
+  return response.data;
+}
 
 export default function Create() {
   const user = useSelector((state) => state.UserInfo);
-  const dispatch = useDispatch();
   const navigater = useNavigate();
-  // useState 각각 사용하는 것 보단 묶어서 하나의 State의 형태로 관리하는게 용이
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(createPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("posts");
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await mutation.mutateAsync({
+        title: title,
+        content: content,
+        author: user.email,
+      });
+      setTitle("");
+      setContent("");
+      navigater("/");
+    } catch (error) {
+      console.error("에러", error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -24,10 +51,7 @@ export default function Create() {
             flexDirection: "column",
             justifyContent: "space-evenly",
           }}
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("제출!");
-          }}
+          onSubmit={handleSubmit}
         >
           <div>
             <input
@@ -71,12 +95,7 @@ export default function Create() {
             />
           </div>
           <button
-            onClick={() => {
-              dispatch(
-                add({ title: title, content: content, author: user.email })
-              );
-              navigater("/");
-            }}
+            type="submit"
             style={{
               width: "100%",
               height: "40px",

@@ -1,26 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
 
-const initialState = [
-  {
-    id: nanoid(),
-    title: "리액트 복습하기",
-    content: "리액트 내용 복습하기",
-    author: "작성자",
-  },
-  {
-    id: nanoid(),
-    title: "리덕스툴킷 복습하기",
-    content: "리덕스툴킷 내용 복습하기",
-    author: "작성자",
-  },
-  {
-    id: nanoid(),
-    title: "타입스크립트 공부하기",
-    content: "타입스크립트 공부하기",
-    author: "작성자",
-  },
-];
+const initialState = [];
 
 let todolist = createSlice({
   name: "item",

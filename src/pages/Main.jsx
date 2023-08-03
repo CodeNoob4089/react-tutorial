@@ -1,14 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Header from "../common/Header";
 import Container from "../common/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { remove } from "../redux/todolist";
+import Header from "../common/Header";
+import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+const fetchData = async () => {
+  const response = await fetch("http://localhost:4000/posts");
+  if (!response.ok) {
+    throw new Error("An error occurred while fetching the data.");
+  }
+  return response.json();
+};
+
+const deletePostById = async (id) => {
+  await axios.delete(`http://localhost:4000/posts/${id}`);
+};
+
 export default function Main() {
-  const data = useSelector((state) => state.todolist);
+  const queryClient = useQueryClient();
+  const { data } = useQuery("posts", fetchData);
   const user = useSelector((state) => state.UserInfo);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const removePostMutation = useMutation(deletePostById, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("posts");
+    },
+  });
+
+  const editTodo = (item) => {
+    if (user !== null) {
+      item.author !== user.email
+        ? alert("수정권한이 없습니다.")
+        : navigate(`/edit/${item.id}`);
+    } else {
+      return alert("로그인이 필요합니다"), navigate("/login");
+    }
+  };
 
   return (
     <>
@@ -39,7 +69,7 @@ export default function Main() {
             추가
           </button>
         </div>
-        {data.map(
+        {data?.map(
           (
             item //data라는 state 안에있는 내용물을 map함수를 사용해 보여준다. state안에 배열형태로 들어있기때문에 map함수로 보여줄수있다.
           ) => (
@@ -89,17 +119,7 @@ export default function Main() {
                 <div>{item.author}</div>
                 <div>
                   <button
-                    onClick={() => {
-                      if (user !== null) {
-                        if (item.author !== user.email) {
-                          return alert("수정권한이 없습니다.");
-                        } else {
-                          return navigate(`/edit/${item.id}`);
-                        }
-                      } else {
-                        return alert("로그인이 필요합니다"), navigate("/login");
-                      }
-                    }}
+                    onClick={() => editTodo(item)}
                     style={{
                       border: "none",
                       padding: "8px",
@@ -117,10 +137,7 @@ export default function Main() {
                       if (user !== null) {
                         if (item.author === user.email) {
                           if (window.confirm("삭제하시겠습니까?")) {
-                            return (
-                              dispatch(remove(item.id)),
-                              alert("삭제되었습니다.")
-                            );
+                            removePostMutation.mutate(item.id);
                           } else {
                             return;
                           }

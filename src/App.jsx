@@ -1,10 +1,10 @@
-import { Routes, Route } from "react-router-dom";
-import Main from "./pages/Main";
-import Detail from "./pages/Detail";
+import { Route, Routes } from "react-router-dom";
 import Create from "./pages/Create";
+import Detail from "./pages/Detail";
 import Edit from "./pages/Edit";
-import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Main from "./pages/Main";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
